@@ -1,0 +1,44 @@
+.content {
+  text-align: center;
+  margin: 50px auto;
+  max-width: 800px;
+}
+
+img {
+  display: block; /* Faz a imagem ocupar toda a largura disponível */
+  margin: 0 auto; /* Centraliza a imagem horizontalmente */
+  max-width: 100%; /* Garante que a imagem não ultrapasse a largura do container */
+}
+
+.vacinas-animais {
+  display: flex; /* Cria um container flex para as seções de cães e gatos */
+  justify-content: space-around; /* Distribui as seções igualmente */
+}
+.navbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end; /* Alinha o conteúdo à direita */
+  padding: 10px;
+  background-color: #f8f9fa; /* Cor de fundo do cabeçalho */
+}
+
+.login-button {
+  background-color: #007bff; /* Cor de fundo do botão */
+  color: white; /* Cor do texto do botão */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #0056b3; /* Cor de fundo do botão ao passar o mouse */
+}
+
+
