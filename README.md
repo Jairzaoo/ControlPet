@@ -1,5 +1,5 @@
 # ControlPet
-<<<<<<< HEAD
+
 Projeto Integrador
 =======
 
