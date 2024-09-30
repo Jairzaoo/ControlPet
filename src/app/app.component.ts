@@ -1,15 +1,19 @@
+// src/app/app.component.ts
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  standalone: true
 })
 export class AppComponent {
-  title = 'Vet Clinic';
 
-  onLoginClick() {
-    alert('Login em manutenção!'); // Aqui você pode redirecionar ou mostrar uma mensagem
+  constructor(private router: Router) {}
+
+  // Função para redirecionar para a área de login
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 }

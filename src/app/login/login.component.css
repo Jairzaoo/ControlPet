@@ -1,6 +1,10 @@
-.maintenance {
-  text-align: center;
-  margin-top: 100px;
-  font-size: 1.5rem;
-  color: #ff0000;
+/* src/app/login/login.component.css */
+.login-container {
+  width: 300px;
+  margin: auto;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
