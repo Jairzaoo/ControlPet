@@ -1,9 +1,12 @@
-import { importProvidersFrom } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+// src/app/app.config.ts
+import { ApplicationConfig } from '@angular/core';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
 
-
-export const appConfig = {
+export const appConfig: ApplicationConfig = {
   providers: [
-    importProvidersFrom(BrowserModule),
-      ]
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideAuth(() => getAuth())
+  ]
 };
