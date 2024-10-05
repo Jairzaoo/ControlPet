@@ -1,13 +1,11 @@
-// src/app/login/login.component.ts
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';  // Para navegação pós-login
-import { AuthService } from '../services/auth.service';  // Importa o serviço de autenticação
+import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';  // Corrigindo o caminho de importação
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  standalone: true  // Tornar o componente standalone
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   email: string = '';
@@ -16,17 +14,11 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  // Função de login
   login() {
-    this.authService.login(this.email, this.password)
-      .then(() => {
-        console.log('Login successful');
-        // Redireciona para a tela de pós-login após o sucesso
-        this.router.navigate(['/post-login']);
-      })
-      .catch(error => {
-        this.errorMessage = error.message;
-        console.error('Login failed:', error);
-      });
+    this.authService.login(this.email, this.password).then(() => {
+      this.router.navigate(['/post-login']);
+    }).catch((err: any) => {
+      this.errorMessage = 'Login falhou. Tente novamente.';
+    });
   }
 }
