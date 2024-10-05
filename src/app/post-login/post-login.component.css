@@ -1,0 +1,10 @@
+/* src/app/post-login/post-login.component.css */
+.post-login-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .post-login-container h2 {
+    color: green;
+  }
+  
