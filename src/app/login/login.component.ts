@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { AuthService } from '../auth/auth.service';  // Corrigindo o caminho de importação
+=======
+import { AuthService } from '../auth/auth.service'; // Verifique o caminho
+>>>>>>> 47a6f47 ( )
 
 @Component({
   selector: 'app-login',

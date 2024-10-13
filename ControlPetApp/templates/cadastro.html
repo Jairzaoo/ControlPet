@@ -1,0 +1,6 @@
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Cadastre-se</button>    
+    <a href="/login" class="btn btn-secondary">Voltar para Login</a>   
+</form>
