@@ -1,0 +1,79 @@
+<!-- ControlPetApp/templates/editarpet.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Pet</title>
+    <link rel="stylesheet" href="{% static 'ControlPetApp/css/editarpet.css' %}">
+</head>
+<body>
+    <h1>Editar Pet</h1>
+
+    <div class="container">
+        <!-- Display messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <!-- Add fields for pet editing -->
+            <label for="pet_name">Nome do Pet:</label>
+            <input type="text" id="pet_name" name="pet_name" value="{{ pet.name }}" required>
+
+            <label for="pet_type">Tipo do Pet:</label>
+            <select id="pet_type" name="pet_type" required>
+                <option value="" disabled>Selecione o tipo do pet</option>
+                <option value="Cachorro" {% if pet.pet_type == 'Cachorro' %}selected{% endif %}>Cachorro</option>
+                <option value="Gato" {% if pet.pet_type == 'Gato' %}selected{% endif %}>Gato</option>
+            </select>
+
+            <label for="consultation_date">Data da Consulta:</label>
+            <input type="date" id="consultation_date" name="consultation_date" value="{{ pet.consultation_date|date:'Y-m-d' }}">
+
+            <label for="vaccine">Vacina:</label>
+            <select id="vaccine" name="vaccine" onchange="toggleVaccineDate()">
+                <option value="" disabled>Selecione a vacina</option>
+                <option value="V8" {% if pet.vaccine == 'V8' %}selected{% endif %}>V8</option>
+                <option value="V10" {% if pet.vaccine == 'V10' %}selected{% endif %}>V10</option>
+                <option value="Não Vacinado" {% if pet.vaccine == 'Não Vacinado' %}selected{% endif %}>Não Vacinado</option>
+            </select>
+
+            <label for="last_vaccine_date" id="last_vaccine_date_label">Data da última vacina:</label>
+<input type="date" id="last_vaccine_date" name="last_vaccine_date" value="{{ pet.last_vaccine_date|date:'Y-m-d' }}">
+
+            <button type="submit">Atualizar Pet</button>
+        </form>
+    </div>
+
+    <a href="{% url 'consulta' %}">Voltar para Consulta</a>
+
+    <script>
+        function toggleVaccineDate() {
+            var vaccineSelect = document.getElementById("vaccine");
+            var lastVaccineDateLabel = document.getElementById("last_vaccine_date_label");
+            var lastVaccineDateInput = document.getElementById("last_vaccine_date");
+    
+            if (vaccineSelect.value === "Não Vacinado") {
+                lastVaccineDateLabel.style.display = "none";
+                lastVaccineDateInput.style.display = "none";
+                lastVaccineDateInput.required = false;
+            } else {
+                lastVaccineDateLabel.style.display = "block";
+                lastVaccineDateInput.style.display = "block";
+                lastVaccineDateInput.required = true;
+            }
+        }
+    
+        // Initialize the toggle based on the initial value
+        toggleVaccineDate();
+    </script>
+</body>
+
+</html>
