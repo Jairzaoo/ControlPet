@@ -1,0 +1,63 @@
+<!-- ControlPetApp/templates/consulta.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta</title>
+    <link rel="stylesheet" href="{% static 'ControlPetApp/css/consulta.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Bem-vindo, {{ user.first_name }}</h1>
+    </header>
+    <div class="container">
+        <!-- Display messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <h2>Seus Pets Cadastrados:</h2>
+        {% if pets %}
+            <ul>
+            {% for pet in pets %}
+                <li>
+                    <div class="pet-info">
+                        {{ pet.name }} - {{ pet.pet_type }}
+                        <br>
+                        {% if pet.consultation_date %}
+                            Data da Consulta: {{ pet.consultation_date }}
+                            {% if pet.consultation_time %}
+                                <br>Hora da Consulta: {{ pet.consultation_time }}
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'marcar_consulta' pet.id %}" class="marcar-consulta">Marque sua consulta</a>
+                        {% endif %}
+                        <br>
+                        {% if pet.vaccine != 'Não Vacinado' %}
+                            Data da última vacina: {{ pet.last_vaccine_date }}
+                            <br>
+                        {% endif %}
+                        Vacina: {{ pet.vaccine }}
+                    </div>
+                    <div class="actions">
+                        <a href="{% url 'editar_pet' pet.id %}" class="edit">Editar</a>
+                        <a href="{% url 'deletar_pet' pet.id %}" class="delete">Deletar</a>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Você não tem nenhum pet cadastrado.</p>
+        {% endif %}
+    </div>
+    <a href="{% url 'cadastrar_pet' %}" class="add-pet">Adicione um Pet</a>
+    <br>
+    <a href="{% url 'logout' %}" class="logout">Logout</a>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!-- ControlPetApp/templates/cadastrarpet.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Pet</title>
+    <link rel="stylesheet" href="{% static 'ControlPetApp/css/cadastrarpet.css' %}">
+    
+</head>
+<body>
+    <h1>Cadastrar um novo pet</h1>
+
+    <div class="container">
+        <!-- Display messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <!-- Add fields for pet registration -->
+            <label for="pet_name">Nome do Pet:</label>
+            <input type="text" id="pet_name" name="pet_name" required>
+
+            <label for="pet_type">Tipo do Pet:</label>
+            <select id="pet_type" name="pet_type" required>
+                <option value="" disabled selected>Selecione o tipo do pet</option>
+                <option value="Cachorro">Cachorro</option>
+                <option value="Gato">Gato</option>
+            </select>
+
+            <label for="vaccine">Vacina:</label>
+            <select id="vaccine" name="vaccine" onchange="toggleVaccineDate()">
+                <option value="" disabled selected>Selecione a vacina</option>
+                <option value="V8">V8</option>
+                <option value="V10">V10</option>
+                <option value="Não Vacinado">Não Vacinado</option>
+            </select>
+
+            <label for="last_vaccine_date" id="last_vaccine_date_label">Data da última vacina:</label>
+            <input type="date" id="last_vaccine_date" name="last_vaccine_date">
+
+            <button type="submit">Cadastrar Pet</button>
+        </form>
+    </div>
+
+    <a href="{% url 'consulta' %}">Voltar para Consulta</a>
+
+    <script>
+        function toggleVaccineDate() {
+            var vaccineSelect = document.getElementById("vaccine");
+            var lastVaccineDateLabel = document.getElementById("last_vaccine_date_label");
+            var lastVaccineDateInput = document.getElementById("last_vaccine_date");
+    
+            if (vaccineSelect.value === "Não Vacinado") {
+                lastVaccineDateLabel.style.display = "none";
+                lastVaccineDateInput.style.display = "none";
+                lastVaccineDateInput.required = false;
+            } else {
+                lastVaccineDateLabel.style.display = "block";
+                lastVaccineDateInput.style.display = "block";
+                lastVaccineDateInput.required = true;
+            }
+        }
+    
+        // Initialize the toggle based on the initial value
+        toggleVaccineDate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!-- ControlPetApp/templates/cadastro.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="{% static 'ControlPetApp/css/cadastro.css' %}">
+</head>
+<body>
+    <h2>Cadastro</h2>
+
+    <div class="container">
+        <!-- Display messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">Nome Completo:</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email:</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Senha:</label>
+                {{ form.password1 }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirmar Senha:</label>
+                {{ form.password2 }}
+            </div>
+            <button type="submit">Cadastre-se</button>
+        </form>
+        <a href="{% url 'login' %}">Voltar para Login</a>
+    </div>
+</body>
+</html>

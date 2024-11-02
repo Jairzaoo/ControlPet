@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar Consulta</title>
+    <link rel="stylesheet" href="{% static 'ControlPetApp/css/marcarconsulta.css' %}">
+</head>
+<body>
+    <h1>Marcar Consulta</h1>
+
+    <div class="container">
+        <!-- Display messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <label for="consultation_date">Data da Consulta:</label>
+            <input type="date" id="consultation_date" name="consultation_date" required>
+
+            <label for="consultation_time">Hora da Consulta:</label>
+            <select id="consultation_time" name="consultation_time" required>
+                <!-- Time options will be generated here -->
+            </select>
+
+            <button type="submit">Marcar Consulta</button>
+        </form>
+    </div>
+
+    <a href="{% url 'consulta' %}">Voltar para Consulta</a>
+
+    <script>
+        // Function to fetch available time slots
+        function fetchAvailableTimes() {
+            const consultationDate = document.getElementById('consultation_date').value;
+            const selectElement = document.getElementById('consultation_time');
+
+            if (consultationDate) {
+                fetch('{% url "get_available_times" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: `consultation_date=${consultationDate}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    selectElement.innerHTML = ''; // Clear existing options
+                    if (data.available_times) {
+                        data.available_times.forEach(time => {
+                            const optionElement = document.createElement('option');
+                            optionElement.value = time;
+                            optionElement.textContent = time;
+                            selectElement.appendChild(optionElement);
+                        });
+                    }
+                });
+            }
+        }
+
+        // Function to disable past dates and weekends
+        function disablePastAndWeekendDates() {
+            const today = new Date();
+            const consultationDateInput = document.getElementById('consultation_date');
+
+            consultationDateInput.min = today.toISOString().split('T')[0];
+
+            consultationDateInput.addEventListener('change', function() {
+                const selectedDate = new Date(this.value);
+                const dayOfWeek = selectedDate.getDay();
+
+                if (dayOfWeek === 6) { // 6 = Domingo
+                    this.value = '';
+                    alert('Consultas não podem ser marcadas de Domingo.');
+                }
+            });
+        }
+
+        // Fetch available times when the date changes
+        document.getElementById('consultation_date').addEventListener('change', fetchAvailableTimes);
+
+        // Disable past dates and weekends when the page loads
+        window.onload = function() {
+            disablePastAndWeekendDates();
+            fetchAvailableTimes();
+        };
+    </script>
+</body>
+</html>
