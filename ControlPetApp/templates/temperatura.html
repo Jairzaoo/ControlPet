@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima - Temperatura e Umidade</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .weather-main {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .temperature-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .temperature-timeline .day-card {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin: 0 5px;
+        }
+        .temperature-timeline .day-card h2 {
+            margin: 5px 0;
+            font-size: 24px;
+        }
+        .temperature-timeline .day-card p {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .weather-icon {
+            font-size: 36px;
+            color: #f4b400;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Clima - Temperatura e Umidade</h1>
+        <div class="weather-main" id="current-weather">
+            <!-- Current weather will be inserted here -->
+        </div>
+        <div class="temperature-timeline" id="temperature-timeline">
+            <!-- Hourly temperature cards will be dynamically generated here -->
+        </div>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Temperatura (°C)</th>
+                    <th>Umidade (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+<script>
+    async function fetchData() {
+        const sheetId = '16fQERKg5jus9Zk3USdnfaaZyRscBD0BoUPGmOCzy3go';
+        const sheetName = 'ESP32';
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
+    
+        try {
+            const response = await fetch(url);
+            const csvText = await response.text();
+            const rows = csvText.split('\n').map(row => row.split(',').map(cell => cell.replace(/^"|"$/g, '')));
+            const reversedRows = rows.slice(1).reverse(); // Get the latest entries first
+    
+            // Display the most recent weather data
+            const currentWeatherElement = document.getElementById('current-weather');
+            const [latestDate, latestTime, latestTemp, latestHumidity] = reversedRows[0]; // Latest entry
+    
+            // Extract hours from latestTime and convert to integer
+            const hour = parseInt(latestTime.split(':')[0]);
+    
+            // Determine if it should be sun or moon
+            const weatherIcon = (hour >= 18 || hour < 6) ? '🌙' : '☀️'; // Moon if between 18:00-06:00, otherwise Sun
+    
+            currentWeatherElement.innerHTML = `
+                <div class="weather-icon">${weatherIcon}</div>
+                <p>${latestTemp}°C</p>
+                <p>Umidade: ${latestHumidity}%</p>
+                <p>Hora: ${latestTime.slice(0, 5)}</p> <!-- Display only hour and minutes -->
+            `;
+    
+            // Create a temperature timeline using up to the next 7 rows of data
+            const timelineContainer = document.getElementById('temperature-timeline');
+            timelineContainer.innerHTML = '';
+    
+            reversedRows.slice(0, 7).forEach((row) => {
+                const [data, hora, temperatura, umidade] = row;
+                const formattedTime = hora.slice(0, 5); // Extract only HH:MM from the time
+    
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card';
+                dayCard.innerHTML = `
+                    <h2>${formattedTime}</h2>
+                    <p>${temperatura}°C</p>
+                    <p>${umidade}% umidade</p>
+                `;
+                timelineContainer.appendChild(dayCard);
+            });
+    
+            // Fill the table with data from the sheet
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = ''; // Clear existing data
+    
+            reversedRows.forEach(row => {
+                const [data, hora, temperatura, umidade] = row;
+                const rowElement = document.createElement('tr');
+                rowElement.innerHTML = `
+                    <td>${data}</td>
+                    <td>${hora.slice(0, 5)}</td> <!-- Display only hour and minutes -->
+                    <td>${temperatura}</td>
+                    <td>${umidade}</td>
+                `;
+                tableBody.appendChild(rowElement);
+            });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+    
+    window.onload = fetchData;
+</script>    
+</body>
+</html>

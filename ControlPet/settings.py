@@ -26,7 +26,20 @@ SECRET_KEY = 'django-insecure-@^@s*twes)m+cdj9!&c7s0was5omphlox5vg9ht*^(6ax%6joq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['20.64.244.158']
+ALLOWED_HOSTS = ['47.84.33.85',
+                 'ns10.dnsexit.com',
+                'ns11.dnsexit.com',
+                'ns12.dnsexit.com',
+                'ns13.dnsexit.com',
+                'controlpet.publicvm.com',
+                'www.controlpet.publicvm.com',]
+
+# Set SECURE_PROXY_SSL_HEADER if you are behind a reverse proxy
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Set CSRF_COOKIE_SECURE and SESSION_COOKIE_SECURE to True
+#CSRF_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True
 
 
 
@@ -40,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'ControlPetApp'  
 ]
 
